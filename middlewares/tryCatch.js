@@ -3,6 +3,7 @@ const tryCatch = (controller) => {
         try {
             await controller(req, res, next);
         } catch (error) {
+            // console.error(error.message)
             res.status(500).json({
                 status: "failure",
                 message: "something went wrong",

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const bookingSchema = require('./bookingModel')
+
 
 
 
@@ -47,8 +47,11 @@ const userSchema = new mongoose.Schema({
         // ref:"Hotel",
     },
 ],
-    bookings: [
-        bookingSchema
+    bookings:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Booking'
+        }
     ]
 })
 

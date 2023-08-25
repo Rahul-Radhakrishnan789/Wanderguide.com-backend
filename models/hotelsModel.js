@@ -13,8 +13,10 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         // required: true
     },
-    amenities: [String],
-
+    amenities: [{
+       type:String
+    }],
+ 
     availableRooms: {
         type: Number,
         // required: true
@@ -35,12 +37,11 @@ const hotelSchema = new mongoose.Schema({
             reviewText: String
         }
     ],
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'HotelOwner'
-    }
+    images:[{
+      type:String
+}]
 });
 
-const Hotels = mongoose.model('Hotels', hotelSchema);
+const Hotel = mongoose.model('Hotel', hotelSchema);
 
-module.exports = Hotels;
+module.exports = Hotel;
