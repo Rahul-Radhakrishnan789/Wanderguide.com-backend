@@ -1,13 +1,13 @@
 const Hotel =  require('../models/hotelsModel')
-
+const upload = require('../middlewares/multerMiddleware')
 
 
 //add new hotels
 
 const addHotel = async (req,res) => {
-    const { hotelName,location, price,amenities,availableRooms,propertyType,images } = req.body;
+    const { hotelName,location, price,amenities,availableRooms,propertyType } = req.body;
 
-    console.log(req.file)
+    console.log(req.files)
     // console.log(req.body)
     const hotel = new Hotel({
         hotelName,
@@ -16,12 +16,11 @@ const addHotel = async (req,res) => {
         amenities,
         availableRooms,
         propertyType,
-        images
+        
     })
 
 
-    
-        await hotel.save()
+      await hotel.save()
 
     res.status(200).json({
         status:"success",
