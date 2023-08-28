@@ -9,6 +9,14 @@ const addHotel = async (req,res) => {
 
     console.log(req.files)
     // console.log(req.body)
+
+  //   if (!req.files) {
+  //     return res.status(400).json({
+  //         status: "error",
+  //         message: "No images uploaded",
+  //     });
+  // } 
+
     const hotel = new Hotel({
         hotelName,
         location,
@@ -16,8 +24,10 @@ const addHotel = async (req,res) => {
         amenities,
         availableRooms,
         propertyType,
-        
+
     })
+
+     hotel.images.push(req.files)
 
 
       await hotel.save()

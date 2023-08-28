@@ -38,8 +38,8 @@ const hotelSchema = new mongoose.Schema({
         }
     ],
     images:[{
-      type:String
-}]
+        type:Array
+    }]
 });
 
 const Hotel = mongoose.model('Hotel', hotelSchema);
