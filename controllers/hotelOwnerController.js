@@ -8,6 +8,8 @@ const addHotel = async (req,res) => {
     const { hotelName,location, price,amenities,availableRooms,propertyType } = req.body;
 
     console.log(req.files)
+    const images = req.files.map(({ path, originalname }) => ({ path, originalname }));
+     
     // console.log(req.body)
 
   //   if (!req.files) {
@@ -17,6 +19,8 @@ const addHotel = async (req,res) => {
   //     });
   // } 
 
+// const {path,originalname} = req.files
+
     const hotel = new Hotel({
         hotelName,
         location,
@@ -24,10 +28,10 @@ const addHotel = async (req,res) => {
         amenities,
         availableRooms,
         propertyType,
+        images:images
 
     })
 
-     hotel.images.push(req.files)
 
 
       await hotel.save()

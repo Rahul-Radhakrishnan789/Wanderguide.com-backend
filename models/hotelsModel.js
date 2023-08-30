@@ -9,6 +9,10 @@ const hotelSchema = new mongoose.Schema({
         type: String,
         // required: true
     },
+    state: {
+        type:String
+         // required: true
+    },
     price: {
         type: Number,
         // required: true
@@ -37,9 +41,9 @@ const hotelSchema = new mongoose.Schema({
             reviewText: String
         }
     ],
-    images:[{
+    images:{
         type:Array
-    }]
+    }
 });
 
 const Hotel = mongoose.model('Hotel', hotelSchema);
