@@ -5,7 +5,7 @@ const upload = require('../middlewares/multerMiddleware')
 //add new hotels
 
 const addHotel = async (req,res) => {
-    const { hotelName,location, price,amenities,availableRooms,propertyType } = req.body;
+    const { hotelName,location, price,amenities,availableRooms,propertyType,state} = req.body;
 
     console.log(req.files)
     const images = req.files.map(({ path, originalname }) => ({ path, originalname }));
@@ -19,12 +19,13 @@ const addHotel = async (req,res) => {
   //     });
   // } 
 
-// const {path,originalname} = req.files
+
 
     const hotel = new Hotel({
         hotelName,
         location,
         price,
+        state,
         amenities,
         availableRooms,
         propertyType,
@@ -44,7 +45,20 @@ const addHotel = async (req,res) => {
 
 }
 
+const displayHotels = async(req,res) => {
+
+  const hotels = await Hotel.find();
+ 
+  res.json({
+    status:"success",
+    data:hotels
+  })
+
+
+}
+
 
 module.exports = {
     addHotel,
+    displayHotels
 }
