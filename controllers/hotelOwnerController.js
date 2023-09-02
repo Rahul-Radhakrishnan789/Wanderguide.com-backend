@@ -1,5 +1,5 @@
 const Hotel =  require('../models/hotelsModel')
-const upload = require('../middlewares/multerMiddleware')
+
 
 
 //add new hotels
@@ -40,10 +40,12 @@ const addHotel = async (req,res) => {
     res.status(200).json({
         status:"success",
         message:"Hotel created succesfully",
-        data: hotel,
+        data: hotel, 
       })
 
 }
+
+//display all hotels
 
 const displayHotels = async(req,res) => {
 
@@ -58,7 +60,46 @@ const displayHotels = async(req,res) => {
 }
 
 
+//delete a specific hotel
+
+const deleteHotel = async (req,res) => {
+
+  const hotelId = req.params.id;
+
+  const deletehotel = await Hotel.findByIdAndDelete(hotelId);
+
+  if(!deletehotel){
+    return res.status(404).json({ error: 'Hotel not found' });
+  }
+
+  return res.json({
+    status: "success",
+    message:"Hotel deleted"
+  })
+}
+
+
+//update a hotel
+
+const hotelUpdate = async (req, res) => {
+   
+  const updatedHotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+  if (!updatedHotel) {
+    return res.status(404).json({ error: 'Hotel not found' });
+  }
+
+ return res.json({ status:"success",
+             message: 'Hotel updated successfully',
+             data:updatedHotel });
+
+};
+
+
+
 module.exports = {
     addHotel,
-    displayHotels
+    displayHotels,
+    deleteHotel,
+    hotelUpdate
 }
