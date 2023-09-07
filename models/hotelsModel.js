@@ -43,6 +43,14 @@ const hotelSchema = new mongoose.Schema({
     ],
     images:{
         type:Array
+    },
+   
+    longitude:{
+         type:Array
+    },
+    latitude:{
+         type:Array
+        
     }
 });
 
