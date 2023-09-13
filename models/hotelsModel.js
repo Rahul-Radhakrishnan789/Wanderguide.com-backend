@@ -17,9 +17,9 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         // required: true
     },
-    amenities: [{
-       type:String
-    }],
+    amenities: {
+       type:Array
+    },
  
     availableRooms: {
         type: Number,
@@ -31,7 +31,7 @@ const hotelSchema = new mongoose.Schema({
     },
     propertyType: {
         type: String,
-        enum: ['Hotel', 'Resort', 'Motel', 'Guest House', 'Other'],
+        enum: ['Hotel', 'Resort', 'Motel', 'Guest House', 'Hostel','Entire apartment','Homestay','Tent','Farm stay','Entire bungalow','Bed and breakfast',],
         // required: true
     },
     reviews: [

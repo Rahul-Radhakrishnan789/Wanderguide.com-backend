@@ -20,17 +20,13 @@ const addHotel = async (req,res) => {
         if ( req.method == "POST"){
 
            
-           const files = req.files
-
-           console.log("the files",files)
+           const files = req.files 
            
            for ( const file of files ){
                 
                 const { path } = file
-                console.log("paths",path)
                 
               const newPath = await uploader(path)
-                console.log("new path :",newPath)
                 
                 urls.push(newPath)
                 
@@ -43,7 +39,7 @@ const addHotel = async (req,res) => {
       location,
       price,
       state,
-      amenities,
+      amenities:amenities.split(','),
       availableRooms,
       propertyType,
       images:urls,
