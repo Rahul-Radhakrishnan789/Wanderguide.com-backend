@@ -36,20 +36,30 @@ const hotelSchema = new mongoose.Schema({
     },
     reviews: [
         {
-            username: String,
-            rating: Number,
-            reviewText: String
+            userName: {
+                type: String,
+                // required: true,
+              },
+              review: {
+                type: String,
+                // required: true,
+              },
+              rating: {
+                type: Number,
+                // required: true,
+              },
         }
     ],
+    
     images:{
         type:Array
     },
    
     longitude:{
-         type:Array
+         type:String
     },
     latitude:{
-         type:Array
+         type:String
         
     }
 });

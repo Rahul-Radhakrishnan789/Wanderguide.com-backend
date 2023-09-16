@@ -13,6 +13,9 @@ const {
     addToWishlist,
     removeFromWishlist,
     displayWishlist,
+    viewProduct,
+    bookHotel,
+    addReview,
              } = require('../controllers/userController')
 
 router.post('/api/users/register',tryCatch(userRegister))
@@ -26,6 +29,12 @@ router.post('/api/users/addtowishlist/:id',tryCatch(addToWishlist))
 router.delete('/api/users/removefromwishlist/:id',tryCatch(removeFromWishlist))
 
 router.get('/api/users/displaywishlist/:id',tryCatch(displayWishlist))
+
+router.get('/api/users/specifichotel/:id',tryCatch(viewProduct))
+
+router.post('/api/users/hotelbooking/:id',tryCatch(bookHotel))
+
+router.post('/api/users/review/:userid/:hotelid',tryCatch(addReview))
 
 
 

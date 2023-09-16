@@ -2,6 +2,8 @@ const User = require('../models/userModel')
 
 const Hotel = require('../models/hotelsModel')
 
+const Booking = require('../models/bookingModel')
+
 const bcrypt = require('bcrypt')
 
 const jwt = require('jsonwebtoken')
@@ -164,6 +166,93 @@ const addToWishlist = async (req,res) => {
    }
 
 
+   // display a specific hotel
+
+   const viewProduct = async (req,res) => {
+       
+    const specificHotel = await Hotel.findById(req.params.id)
+    if(!specificHotel){
+        return res.status(404).json({ error: 'Hotel not found' });
+      }
+
+      res.json({
+        status:"success",
+        data:specificHotel
+      })
+
+}
+
+const bookHotel = async(req,res) => {
+
+  const {checkInDate,checkOutDate,roomNumber,numberOfGuests} = req.body;
+
+  const user = await User.findById(req.params .id);
+
+  if(!user){
+    return res.status(404).json({ error: 'User not found' });
+  }
+  const booking = new Booking({
+    checkInDate,
+    checkOutDate,
+    roomNumber,
+    numberOfGuests,
+  });
+
+    user.bookings.push(booking);
+
+    await user.save()
+
+    res.json({
+      status:"success",
+       message: 'booking stages started successfully',
+       data: user.bookings
+      });
+  
+}
+
+const addReview = async(req,res) => {
+
+  const {review,rating} = req.body;
+
+  console.log(review,rating)
+
+  const user = await User.findById(req.params.userid);
+
+  const hotel = await Hotel.findOne({_id:req.params.hotelid});
+
+  if(!user){
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  if(!hotel){
+    return res.status(404).json({ error: 'hotel not found' });
+  }
+
+  const userName = user.userName;
+  console.log(userName)
+  
+  hotel.reviews.push({
+    userName:userName,
+    rating:rating,
+    review:review,
+  })
+
+
+  await hotel.save()
+
+ return res.json({
+      status:"success",
+       message: 'review added successfully',
+       data: hotel.reviews
+      });
+
+}
+
+const displayReview = async (req,res) => {
+  
+}
+
+
 
 
 module.exports = {
@@ -173,4 +262,7 @@ module.exports = {
     addToWishlist,
     removeFromWishlist,
     displayWishlist,
+    viewProduct,
+    bookHotel,
+    addReview
 }
