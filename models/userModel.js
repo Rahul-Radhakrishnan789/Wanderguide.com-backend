@@ -47,12 +47,12 @@ const userSchema = new mongoose.Schema({
         ref:"Hotel",
     },
 ],
-    bookings:[
+    booking:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Booking'
-        }
-    ]
+            ref:"Booking",
+        },
+    ],
 })
 
 const User = mongoose.model("User", userSchema)

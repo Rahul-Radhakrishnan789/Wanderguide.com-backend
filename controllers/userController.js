@@ -186,26 +186,30 @@ const bookHotel = async(req,res) => {
 
   const {checkInDate,checkOutDate,roomNumber,numberOfGuests} = req.body;
 
+  console.log(req.body)
+
   const user = await User.findById(req.params .id);
 
   if(!user){
     return res.status(404).json({ error: 'User not found' });
   }
   const booking = new Booking({
-    checkInDate,
-    checkOutDate,
-    roomNumber,
-    numberOfGuests,
+    checkInDate:checkInDate,
+    checkOutDate:checkOutDate,
+    roomNumber:roomNumber,
+    numberOfGuests:numberOfGuests,
   });
 
-    user.bookings.push(booking);
+    user.booking.push(booking);
+    console.log(booking)
 
+    await booking.save()
     await user.save()
 
     res.json({
       status:"success",
        message: 'booking stages started successfully',
-       data: user.bookings
+       data: user.booking.pop()
       });
   
 }
@@ -248,9 +252,39 @@ const addReview = async(req,res) => {
 
 }
 
-const displayReview = async (req,res) => {
-  
+const displayBookingDetails = async (req,res) => {
+
+  const bookingId = req.params.bookingId;
+
+  const userId = req.params.userId;
+
+console.log("bookingId",bookingId)
+
+  const user = await User.findById(userId).populate('booking')
+
+console.log("user Details",user)
+
+  if(!user){
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+   const bookingDetails = user.booking.find((booking) => booking._id.toString() === bookingId)
+console.log("Booking Details",bookingDetails)
+
+   if(!bookingDetails){
+    return res.status(404).json({error: 'booking not found'})
+   }
+
+
+   return res.json({
+    status:"success",
+     message: 'fetching successful',
+     data: bookingDetails,
+    });
+
 }
+
+
 
 
 
@@ -264,5 +298,7 @@ module.exports = {
     displayWishlist,
     viewProduct,
     bookHotel,
-    addReview
+    addReview,
+    displayBookingDetails,
+    
 }
