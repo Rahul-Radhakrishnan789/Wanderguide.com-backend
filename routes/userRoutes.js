@@ -34,7 +34,7 @@ router.get('/api/users/displaywishlist/:id',tryCatch(displayWishlist))
 
 router.get('/api/users/specifichotel/:id',tryCatch(viewProduct))
 
-router.post('/api/users/hotelbooking/:id',tryCatch(bookHotel))
+router.post('/api/users/hotelbooking/:userId/:hotelId',tryCatch(bookHotel))
 
 router.post('/api/users/review/:userid/:hotelid',tryCatch(addReview))
 

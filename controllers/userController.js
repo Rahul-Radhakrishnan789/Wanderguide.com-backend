@@ -186,18 +186,32 @@ const bookHotel = async(req,res) => {
 
   const {checkInDate,checkOutDate,roomNumber,numberOfGuests} = req.body;
 
+  const hotelId = req.params.hotelId
+
   console.log(req.body)
 
-  const user = await User.findById(req.params .id);
+  const user = await User.findById(req.params.userId);
 
   if(!user){
     return res.status(404).json({ error: 'User not found' });
   }
+
+
+  const timeDifference = new Date(checkOutDate) - new Date(checkInDate); 
+
+  const numberOfDays = Math.ceil(timeDifference/(1000 * 60 * 60 * 24));
+  
+ console.log(numberOfDays)
+
+
+
   const booking = new Booking({
     checkInDate:checkInDate,
     checkOutDate:checkOutDate,
     roomNumber:roomNumber,
     numberOfGuests:numberOfGuests,
+    hotel:hotelId,
+    numberOfDays:numberOfDays,
   });
 
     user.booking.push(booking);
@@ -258,18 +272,16 @@ const displayBookingDetails = async (req,res) => {
 
   const userId = req.params.userId;
 
-console.log("bookingId",bookingId)
-
-  const user = await User.findById(userId).populate('booking')
-
-console.log("user Details",user)
+  const user = await User.findById(userId).populate({
+    path: 'booking',
+    populate: { path: 'hotel' },
+  })
 
   if(!user){
     return res.status(404).json({ error: 'User not found' });
   }
 
    const bookingDetails = user.booking.find((booking) => booking._id.toString() === bookingId)
-console.log("Booking Details",bookingDetails)
 
    if(!bookingDetails){
     return res.status(404).json({error: 'booking not found'})

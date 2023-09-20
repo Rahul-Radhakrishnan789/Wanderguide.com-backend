@@ -5,6 +5,10 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         // required: true
     },
+    phoneNumber:{
+        type:Number,
+        // required: true
+    },
     checkInDate: {
         type: Date,
         // required: true
@@ -33,6 +37,14 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Paid'],
         default: 'Pending'
+    },
+    numberOfDays:{
+        type:Number,
+        // required: true
+    },
+    hotel:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Hotel",
     }
  
 });
