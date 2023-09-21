@@ -40,7 +40,7 @@ const bookingSchema = new mongoose.Schema({
     },
     numberOfDays:{
         type:Number,
-        // required: true
+        // required: true   
     },
     hotel:{
         type:mongoose.Schema.Types.ObjectId,

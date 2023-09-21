@@ -20,8 +20,8 @@ mongoose.connect("mongodb://127.0.0.1:27017")
     const userRoutes = require('./routes/userRoutes')
     app.use(userRoutes)
 
-    //   const adminRouter = require("./routes/adminRoutes")
-    //   app.use(adminRouter)
+      const adminRouter = require("./routes/adminRoutes")
+      app.use(adminRouter)
 
     const hotelOwnerRoutes = require("./routes/hotelOwnerRoutes")
     app.use(hotelOwnerRoutes)

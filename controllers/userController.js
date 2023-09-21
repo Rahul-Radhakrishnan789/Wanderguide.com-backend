@@ -297,8 +297,34 @@ const displayBookingDetails = async (req,res) => {
 }
 
 
+const bookingFinalStage = async (req,res) => {
+
+  const { fullName,phoneNumber,specialRequest,totalPrice }  = req.body;
+
+  const bookingId = req.params.bookingId;
+
+  const booking = await Booking.findById(bookingId);
+
+  if(!booking){
+    return res.status(404).json({ error: 'booking not found' });
+  }
+
+  booking.customerName = fullName;
+  booking.phoneNumber = phoneNumber;
+  booking.specialRequests = specialRequest;
+  booking.totalPrice = totalPrice,
 
 
+  await booking.save();
+
+  
+ return res.json({
+  status:"success",
+   message: 'booking datas added successfully',
+   data:booking
+  });
+
+}
 
 
 module.exports = {
@@ -312,5 +338,6 @@ module.exports = {
     bookHotel,
     addReview,
     displayBookingDetails,
+    bookingFinalStage,
     
 }

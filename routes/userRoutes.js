@@ -16,7 +16,8 @@ const {
     viewProduct,
     bookHotel,
     addReview,
-    displayBookingDetails
+    displayBookingDetails,
+    bookingFinalStage,
  
              } = require('../controllers/userController')
 
@@ -39,6 +40,8 @@ router.post('/api/users/hotelbooking/:userId/:hotelId',tryCatch(bookHotel))
 router.post('/api/users/review/:userid/:hotelid',tryCatch(addReview))
 
 router.get('/api/users/displayBookingDetails/:userId/:bookingId',tryCatch(displayBookingDetails))
+
+router.post('/api/users/bookingfinal/:bookingId',tryCatch(bookingFinalStage))
 
 
 
