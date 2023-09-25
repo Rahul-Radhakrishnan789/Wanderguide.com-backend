@@ -1,35 +1,91 @@
 const Coupon = require('../models/couponModel')
 
-const Hotel  = require('../models/hotelsModel')
 
-const moment = require("moment");
+
+
 
 
 const addCouponDiscount = async (req,res) => {
+
     const {
-        couponCodeName,
+        couponId,
         discount,
-        discountStatus,
-        expirationTime,
+        maxLimit,
+        minPurchase,
+        expDate,
+      } = req.body;
+
+      if( Coupon.findOne({couponId:couponId})){
+        return res.status(404).json({ error:'Coupon already Created' })
+      }
+
+      const coupon = new Coupon({
+        couponId,
+        discount,
+        maxLimit,
+        minPurchase,
+        expDate,
+      });
+
+      await coupon.save();
+
+      return res.json({ status:"success",
+      message: 'Coupon added successfully',
+      data: coupon });
+}
+
+
+const editCoupon = async (req,res) => {
+    const  couponId  = req.params.couponId;
+
+    // console.log("couponId",couponId)
+    const {
+      discount,
+      maxLimit,
+      minPurchase,
+      expDate,
     } = req.body;
 
-    const hotelId = req.params.hotelId;
+  
+    const existingCoupon = await Coupon.findOne({ _id:couponId });
 
-    const { price } = await Hotel.findOne({ _id: hotelId })
-    .select("price")
-    .exec();
+    // console.log("existing Coupon,",existingCoupon)
 
-    const totalPrice = originalPrice - discount;
-    const endDate = new Date(expirationTime);
-    let currentDate = new Date().getTime(); // new Date().getTime() returns value in number
-    console.log(endDate, currentDate); // endDate number > currentDate number
+    if (!existingCoupon) {
+      return res.status(404).json({ error: 'Coupon not found' });
+    }
 
-    const originalPrice = price;
+    if (discount !== undefined) {
+      existingCoupon.discount = discount;
+    }
 
+    if (maxLimit !== undefined) {
+      existingCoupon.maxLimit = maxLimit;
+    }
+
+    if (minPurchase !== undefined) {
+      existingCoupon.minPurchase = minPurchase;
+    }
+
+    if (expDate !== undefined) {
+
+     
+      existingCoupon.expDate = expDate;
+    }
+
+    const updatedCoupon = await existingCoupon.save();
+
+    res.json({
+      status: 'success',
+      message: 'Coupon updated successfully',
+      data: updatedCoupon,
+    });
 }
+
 
 
 
 module.exports = {
     addCouponDiscount,
+    editCoupon,
 }

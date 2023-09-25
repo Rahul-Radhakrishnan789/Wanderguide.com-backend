@@ -18,6 +18,9 @@ const {
     addReview,
     displayBookingDetails,
     bookingFinalStage,
+    verifyPayment,
+    payment,
+    displayOrders,
  
              } = require('../controllers/userController')
 
@@ -42,6 +45,12 @@ router.post('/api/users/review/:userid/:hotelid',tryCatch(addReview))
 router.get('/api/users/displayBookingDetails/:userId/:bookingId',tryCatch(displayBookingDetails))
 
 router.post('/api/users/bookingfinal/:bookingId',tryCatch(bookingFinalStage))
+
+router.post('/api/users/paymentstart',tryCatch(payment))
+
+router.post('/api/users/paymentend/:bookingId',tryCatch(verifyPayment))
+
+router.get('/api/users/displayOrders/:userId',tryCatch(displayOrders))
 
 
 

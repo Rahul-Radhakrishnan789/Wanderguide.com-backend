@@ -1,47 +1,43 @@
 const mongoose = require("mongoose");
+
 const moment = require("moment");
 
 
 const couponSchema = new mongoose.Schema({
-    couponCodeName: {
-        type: String,
+    couponId:{
+        type:String,
+        require:true,
         min: 5,
         max: 15,
         trim: true,
         uppercase:true,
-        // required: true,
     },
-    hoteltId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Hotel",
-        // required: true,
+    addDate:{
+        type:String,
+        default: moment().format("DD/MM/YYYY") + ";" + moment().format("hh:mm:ss"),
     },
-    discount: {
-        type: String,
-    },
-    discountStatus: {
-        type: Boolean,
-        // required: true,
-    },
+    discount:{
+        type:Number,
 
-    originalPrice: {
-        type: Number,
     },
-    finalPrice: {
-        type: Number,
+    maxLimit:{
+     type: Number,
     },
-    createdAt: {
-        type: String,
-        default: moment().format("DD/MM/YYYY") + ";" + moment().format("hh:mm:ss"),
+    
+    minPurchase:{
+        type:Number,
     },
-    updatedAt: {
-        type: String,
-        default: moment().format("DD/MM/YYYY") + ";" + moment().format("hh:mm:ss"),
+    expDate:{
+        type:Date,
+        required:true,
+
     },
-    expirationTime: {
-        type: String,
-        // required: true,
+    status:{
+        type:Boolean,
+        default:true,
     },
+ 
+
 });
 
 

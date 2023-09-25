@@ -45,6 +45,9 @@ const bookingSchema = new mongoose.Schema({
     hotel:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Hotel",
+    },
+    order_id:{
+        type:String, 
     }
  
 });

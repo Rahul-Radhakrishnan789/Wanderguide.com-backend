@@ -61,6 +61,10 @@ const hotelSchema = new mongoose.Schema({
     latitude:{
          type:String
         
+    },
+    coupons:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Coupon'
     }
 });
 

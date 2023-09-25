@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
 const morgan = require('morgan')
+const Coupon = require('./models/couponModel')
 const path = require('path')
 require('dotenv').config();
 
@@ -29,3 +30,40 @@ mongoose.connect("mongodb://127.0.0.1:27017")
 app.listen(2000,() =>{
     console.log("server listening on port 2000")
 })
+
+const checkExpirationTime = () => {
+    Coupon.find({})
+        .exec()
+        .then((Coupon) => {
+            if (Coupon) {
+                Coupon.map((getCoupon) => {
+                    if (
+                        new Date().getTime() >= new Date(getCoupon.expirationTime).getTime()
+                    ) {
+                    
+                        CouponCodeDiscount.findOneAndDelete({
+                                _id: getCoupon._id,
+                            })
+                            .exec()
+                            .then((deleteCoupon) => {
+                                console.log(`Coupon doesnt exists or expired`);
+
+                            })
+                            .catch((error) => {
+                                console.log(error, "Error occured on coupon section");
+                            });
+                    }
+                });
+            }
+            if (!Coupon) {
+                console.log("No Coupon found...");
+            }
+        });
+};
+
+
+setInterval(() => {
+    checkExpirationTime
+    console.log('hi')
+  }, 10000000);
+

@@ -8,6 +8,12 @@ const bcrypt = require('bcrypt')
 
 const jwt = require('jsonwebtoken')
 
+const Razorpay = require('razorpay')
+
+const crypto = require('crypto')
+
+const mongoose = require('mongoose');
+
 
 //user registration
 
@@ -182,11 +188,13 @@ const addToWishlist = async (req,res) => {
 
 }
 
+// start first stage of booking
+
 const bookHotel = async(req,res) => {
 
   const {checkInDate,checkOutDate,roomNumber,numberOfGuests} = req.body;
 
-  const hotelId = req.params.hotelId
+  const hotelId = req.params.hotelId;
 
   console.log(req.body)
 
@@ -228,6 +236,8 @@ const bookHotel = async(req,res) => {
   
 }
 
+// add review
+
 const addReview = async(req,res) => {
 
   const {review,rating} = req.body;
@@ -266,6 +276,8 @@ const addReview = async(req,res) => {
 
 }
 
+//display booking details
+
 const displayBookingDetails = async (req,res) => {
 
   const bookingId = req.params.bookingId;
@@ -295,6 +307,8 @@ const displayBookingDetails = async (req,res) => {
     });
 
 }
+
+//final stage of booking
 
 
 const bookingFinalStage = async (req,res) => {
@@ -326,6 +340,89 @@ const bookingFinalStage = async (req,res) => {
 
 }
 
+// payment section 
+
+const payment = async (req,res) => {
+
+  const instance = new Razorpay({
+    key_id: process.env.KEY_ID,
+    key_secret: process.env.KEY_SECRET,
+  });
+
+  const options = {
+    amount: req.body.amount * 100,
+    currency: "INR",
+    receipt: crypto.randomBytes(10).toString("hex"),
+  };  
+
+  instance.orders.create(options, (error, order) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Something Went Wrong!" });
+    }
+    res.status(200).json({ data: order });
+	});
+}
+
+const verifyPayment = async (req,res) => {
+
+  const bookingId = req.params.bookingId;
+
+  const booking = await Booking.findById(bookingId);
+
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+		const sign = razorpay_order_id + "|" + razorpay_payment_id;
+		const expectedSign = crypto
+			.createHmac("sha256", process.env.KEY_SECRET)
+			.update(sign.toString())
+			.digest("hex");
+
+		if (razorpay_signature === expectedSign) {
+			
+      booking.order_id=  razorpay_order_id;
+      booking.paymentStatus = "Paid";
+
+      await booking.save();
+
+
+      res.status(200).json({
+      status:"success",
+      message: "Payment verified successfully",
+      data:razorpay_order_id,
+      });
+		} else {
+			return res.status(400).json({ message: "Invalid signature sent!" });
+		}
+}
+
+// display orders 
+
+const displayOrders = async (req,res) => {
+
+  const userId = req.params.userId;
+
+  const user = await User.findById(userId).populate('booking'); 
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found.' });
+  }
+
+  const paidBookings = user.booking.filter((booking) => booking.paymentStatus === 'Paid');
+
+  if (paidBookings.length > 0) {
+    res.status(200).json({
+      status:"success",
+      message:"fetched all paid bookings",
+      data:paidBookings,
+    }); 
+  } else {
+    console.log('User has no paid bookings.');
+    res.status(404).json({ message: 'User has no paid bookings.' });
+  }
+
+}
+
 
 module.exports = {
     userRegister,
@@ -339,5 +436,7 @@ module.exports = {
     addReview,
     displayBookingDetails,
     bookingFinalStage,
-    
+    payment,
+    verifyPayment,
+    displayOrders,
 }
