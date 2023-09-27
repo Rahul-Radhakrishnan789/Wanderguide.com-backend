@@ -402,7 +402,10 @@ const displayOrders = async (req,res) => {
 
   const userId = req.params.userId;
 
-  const user = await User.findById(userId).populate('booking'); 
+  const user = await User.findById(userId).populate({
+    path: 'booking',
+    populate: { path: 'hotel' },
+  }); 
 
   if (!user) {
     return res.status(404).json({ message: 'User not found.' });

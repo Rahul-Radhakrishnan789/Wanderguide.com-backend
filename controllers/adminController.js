@@ -8,21 +8,21 @@ const Coupon = require('../models/couponModel')
 const addCouponDiscount = async (req,res) => {
 
     const {
-        couponId,
+        couponName,
         discount,
-        maxLimit,
         minPurchase,
         expDate,
       } = req.body;
 
-      if( Coupon.findOne({couponId:couponId})){
+      if(await Coupon.findOne({couponName})){
         return res.status(404).json({ error:'Coupon already Created' })
       }
 
+  
+
       const coupon = new Coupon({
-        couponId,
+        couponId:couponName,
         discount,
-        maxLimit,
         minPurchase,
         expDate,
       });
@@ -34,52 +34,38 @@ const addCouponDiscount = async (req,res) => {
       data: coupon });
 }
 
-
+// edit coupon
+    
 const editCoupon = async (req,res) => {
-    const  couponId  = req.params.couponId;
 
-    // console.log("couponId",couponId)
-    const {
-      discount,
-      maxLimit,
-      minPurchase,
-      expDate,
-    } = req.body;
+  const updatedHotel = await Coupon.findByIdAndUpdate(req.params.couponId, req.body, { new: true });
 
-  
-    const existingCoupon = await Coupon.findOne({ _id:couponId });
+  if (!updatedHotel) {
+    return res.status(404).json({ error: 'Hotel not found' });
+  }
 
-    // console.log("existing Coupon,",existingCoupon)
+ return res.json({ status:"success",
+             message: 'Hotel updated successfully',
+             data:updatedHotel });
 
-    if (!existingCoupon) {
-      return res.status(404).json({ error: 'Coupon not found' });
-    }
+}
 
-    if (discount !== undefined) {
-      existingCoupon.discount = discount;
-    }
+// display all coupons
 
-    if (maxLimit !== undefined) {
-      existingCoupon.maxLimit = maxLimit;
-    }
+const displayCoupons = async(req,res) => {
 
-    if (minPurchase !== undefined) {
-      existingCoupon.minPurchase = minPurchase;
-    }
+  const coupons = await Coupon.find();
 
-    if (expDate !== undefined) {
+  if(coupons.length < 1){
+    return res.status(404).json({ error:'No coupons found' })
+  }
 
-     
-      existingCoupon.expDate = expDate;
-    }
+  res.json({
+    status: 'success',
+    message: ' all Coupons fetched successfully',
+    data: coupons,
+  });
 
-    const updatedCoupon = await existingCoupon.save();
-
-    res.json({
-      status: 'success',
-      message: 'Coupon updated successfully',
-      data: updatedCoupon,
-    });
 }
 
 
@@ -88,4 +74,5 @@ const editCoupon = async (req,res) => {
 module.exports = {
     addCouponDiscount,
     editCoupon,
+    displayCoupons,
 }

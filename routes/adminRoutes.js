@@ -7,13 +7,14 @@ const tryCatch = require('../middlewares/tryCatch')
 
 const {
     addCouponDiscount,
-    editCoupon
+    editCoupon,
+    displayCoupons,
 } = require('../controllers/adminController')
 
 router.post('/api/admin/addcoupon',tryCatch(addCouponDiscount))
 
 router.put('/api/admin/editcoupon/:couponId',tryCatch(editCoupon))
 
-
+router.get('/api/admin/displaycoupons',tryCatch(displayCoupons))
 
 module.exports = router
