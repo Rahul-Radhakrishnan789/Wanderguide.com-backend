@@ -4,7 +4,43 @@ const cloudinary = require('../cloudinary/cloudinary')
 
 const fs = require('fs')
 
+const accountSid = process.env.TWILIO_ACCOUNT_SID 
 
+const authToken = process.env.TWILIO_AUTH_TOKEN  
+
+const client = require('twilio')(accountSid,authToken)
+
+
+
+
+
+
+//hotel owner signup
+
+const hotelOwnerSignUp = async (req,res) => {
+
+  const generateOTP = () => {
+
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const otp = generateOTP()
+
+  client.messages
+  .create({
+    body: `Your OTP is ${otp}`,
+    to: '+919995628471', 
+    from: '+13392302900' ,
+  })
+  .then((message) => console.log(message));
+
+  res.status(200).json({
+    status:'success',
+    message:'message sent successfully',
+    data:otp,
+  })
+
+}
 
 //add new hotels
 
@@ -131,5 +167,6 @@ module.exports = {
     addHotel,
     displayHotels,
     deleteHotel,
-    hotelUpdate
+    hotelUpdate,
+    hotelOwnerSignUp
 }
