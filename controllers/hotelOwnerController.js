@@ -19,6 +19,8 @@ const client = require('twilio')(accountSid,authToken)
 
 const hotelOwnerSignUp = async (req,res) => {
 
+  const { phoneNumber } = req.body;
+
   const generateOTP = () => {
 
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -29,7 +31,7 @@ const hotelOwnerSignUp = async (req,res) => {
   client.messages
   .create({
     body: `Your OTP is ${otp}`,
-    to: '+919995628471', 
+    to: phoneNumber, 
     from: '+13392302900' ,
   })
   .then((message) => console.log(message));

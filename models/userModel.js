@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
     state:{
         type:String
     },
+    blocked:{
+        type:Boolean,
+        default:false
+    },
     wishlist:[
         {
         type:mongoose.Schema.Types.ObjectId,

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require("moment");
 
 const bookingSchema = new mongoose.Schema({
     customerName: {
@@ -27,6 +28,10 @@ const bookingSchema = new mongoose.Schema({
     },
     specialRequests: {
         type: String
+    },
+    addDate:{
+        type:String,
+        default: moment().format("DD/MM/YYYY") + ";" + moment().format("hh:mm:ss"),
     },
     totalPrice: {
         type: Number,

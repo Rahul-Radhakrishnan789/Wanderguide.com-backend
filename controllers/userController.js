@@ -12,7 +12,6 @@ const Razorpay = require('razorpay')
 
 const crypto = require('crypto')
 
-const mongoose = require('mongoose');
 
 
 //user registration
@@ -63,6 +62,24 @@ const userLogin = async (req,res) => {
           userId:user._id
         }
       });
+}
+
+//get user details
+
+const userDetails = async(req,res) => {
+  const userId = req.params.userId;
+
+  const user = await User.findById(userId)
+
+  if(!user){
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  res.json({
+    status:'success',
+    message:'userDetails fetched successfully',
+    data:user,
+  })
 }
 
 // search hotels
@@ -442,4 +459,5 @@ module.exports = {
     payment,
     verifyPayment,
     displayOrders,
+    userDetails,
 }

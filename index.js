@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const morgan = require('morgan')
 const Coupon = require('./models/couponModel')
+const moment = require('moment');
+const Booking = require('./models/bookingModel')
 const path = require('path')
 require('dotenv').config();
 
@@ -14,34 +16,33 @@ app.use(morgan('dev'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 
-mongoose.connect("mongodb://127.0.0.1:27017")
+mongoose.connect(`mongodb+srv://razzrahul789:8UzBjdlfUqT1QaqO@cluster0.dqi7q6y.mongodb.net/`)
     .then(() => console.log("mongodb connected"))
     .catch((e) => console.log("error found", e))
 
     const userRoutes = require('./routes/userRoutes')
     app.use(userRoutes)
 
-      const adminRouter = require("./routes/adminRoutes")
+      const adminRouter = require("./routes/adminRoutes");
       app.use(adminRouter)
 
     const hotelOwnerRoutes = require("./routes/hotelOwnerRoutes")
     app.use(hotelOwnerRoutes)
 
-app.listen(2000,() =>{
-    console.log("server listening on port 2000")
-})
+
 
 const checkExpirationTime = () => {
     Coupon.find({})
         .exec()
-        .then((Coupon) => {
-            if (Coupon) {
-                Coupon.map((getCoupon) => {
+        .then((Coupons) => {
+            if (Coupons) {
+                Coupons.map((getCoupon) => {
+                    console.log(getCoupon.expDate)
                     if (
-                        new Date().getTime() >= new Date(getCoupon.expirationTime).getTime()
+                        new Date().getTime() >= new Date(getCoupon. expDate).getTime() 
                     ) {
                     
-                        CouponCodeDiscount.findOneAndDelete({
+                        Coupon.deleteMany({
                                 _id: getCoupon._id,
                             })
                             .exec()
@@ -61,9 +62,34 @@ const checkExpirationTime = () => {
         });
 };
 
+const deletePendingBookings = async() => {
+    try {
+  
+      const tenMinutesAgo = moment().subtract(10, 'minutes').toDate();
+  
+    
+      const result = await Booking.deleteMany({
+        paymentStatus: 'Pending',
+        addDate: { $lt: tenMinutesAgo },
+      });
+  
+      console.log(`Deleted ${result.deletedCount} pending bookings.`);
+    } catch (error) {
+      console.error('Error deleting pending bookings:', error);
+    }
+  }
+  
+
 
 setInterval(() => {
-    checkExpirationTime
+    checkExpirationTime()
+    deletePendingBookings()
     console.log('hi')
   }, 10000000);
 
+
+  
+
+  app.listen(2000,() =>{
+    console.log("server listening on port 2000")
+})
