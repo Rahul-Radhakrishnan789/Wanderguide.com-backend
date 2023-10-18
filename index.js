@@ -7,7 +7,7 @@ const Coupon = require('./models/couponModel')
 const moment = require('moment');
 const Booking = require('./models/bookingModel')
 const path = require('path')
-require('dotenv').config();
+require('dotenv').config(); 
 
 
 app.use(cors())
