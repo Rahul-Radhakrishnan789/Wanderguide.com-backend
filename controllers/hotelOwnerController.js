@@ -163,6 +163,10 @@ const hotelUpdate = async (req, res) => {
 
 };
 
+const totalRevenueCreated = async(req,res) => {
+  
+}
+
 
 
 module.exports = {
